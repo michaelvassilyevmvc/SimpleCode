@@ -30,7 +30,13 @@ app.Run(async (context) =>
             var form = context.Request.Form;
             var name = form["name"];
             var age = form["age"];
-            await context.Response.WriteAsync($"<div>Name: {name}</div><div>Age: {age}</div>");
+            string[] languages = form["languages"];
+            string langList = "";
+            foreach (var lang in languages)
+            {
+                langList += $"<li>{lang}</li>";
+            }
+            await context.Response.WriteAsync($"<div>Name: {name}</div><div>Age: {age}</div><div><ul>{langList}</ul></div>");
         }
         else
         {
