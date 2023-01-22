@@ -22,14 +22,15 @@ app.MapRazorPages();
 
 app.Run(async (context) => 
     {
-        var path = context.Request.Path;
-        var now = DateTime.Now;
-        var response = context.Response;
-
-        if (path == "/date") await response.WriteAsync($"Date: {now.ToShortDateString()}");
-        else if (path == "/time") await response.WriteAsync($"Time: {now.ToShortTimeString()}");
-        else await response.WriteAsync("Hello Metanit");
-
+        context.Response.ContentType = "text/html; charset=utf-8";
+        StringBuilder sb = new StringBuilder();
+        sb.Append("<table>");
+        foreach (var item in context.Request.Query)
+        {
+            sb.Append($"<tr><td>{item.Key}</td><td>{item.Value}</td></tr>");
+        }
+        sb.Append("</table>");
+        await context.Response.WriteAsync(sb.ToString());
     }
 );
 
