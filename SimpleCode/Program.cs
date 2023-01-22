@@ -1,4 +1,5 @@
 using Microsoft.Extensions.FileProviders;
+using SimpleCode.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,18 +24,15 @@ app.MapRazorPages();
 
 app.Run(async (context) => 
     {
-        if(context.Request.Path == "/old")
+        Person person = new Person
         {
-            context.Response.Redirect("/new");
-        }
-        else if(context.Request.Path == "/new")
-        {
-            await context.Response.WriteAsync("New page");
-        }
-        else
-        {
-            await context.Response.WriteAsync("Main page");
-        }
+            Name = "Tom",
+            Age = 22
+        };
+
+
+
+        await context.Response.WriteAsJsonAsync(person);
 
 
     }
