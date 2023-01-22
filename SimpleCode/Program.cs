@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +23,21 @@ app.MapRazorPages();
 
 app.Run(async (context) => 
     {
-        context.Response.Headers.ContentDisposition = "attachment;filename=cat.jpg";
-        await context.Response.SendFileAsync("cat.jpg");
+        context.Response.ContentType= "text/html;charset=utf-8";
+
+        if(context.Request.Path == "/postuser")
+        {
+            var form = context.Request.Form;
+            var name = form["name"];
+            var age = form["age"];
+            await context.Response.WriteAsync($"<div>Name: {name}</div><div>Age: {age}</div>");
+        }
+        else
+        {
+            await context.Response.SendFileAsync("html/index.html");
+        }
+
+
     }
 );
 
