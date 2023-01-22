@@ -23,24 +23,17 @@ app.MapRazorPages();
 
 app.Run(async (context) => 
     {
-        context.Response.ContentType= "text/html;charset=utf-8";
-
-        if(context.Request.Path == "/postuser")
+        if(context.Request.Path == "/old")
         {
-            var form = context.Request.Form;
-            var name = form["name"];
-            var age = form["age"];
-            string[] languages = form["languages"];
-            string langList = "";
-            foreach (var lang in languages)
-            {
-                langList += $"<li>{lang}</li>";
-            }
-            await context.Response.WriteAsync($"<div>Name: {name}</div><div>Age: {age}</div><div><ul>{langList}</ul></div>");
+            context.Response.Redirect("/new");
+        }
+        else if(context.Request.Path == "/new")
+        {
+            await context.Response.WriteAsync("New page");
         }
         else
         {
-            await context.Response.SendFileAsync("html/index.html");
+            await context.Response.WriteAsync("Main page");
         }
 
 
