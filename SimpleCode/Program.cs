@@ -22,7 +22,21 @@ app.MapRazorPages();
 
 app.Run(async (context) => 
     {
-        await context.Response.SendFileAsync(@"cat.jpg");
+        context.Response.ContentType = "text/html; charset=utf-8";
+
+        var path = context.Request.Path;
+        var fullpath = $"html/{path}";
+        var response = context.Response;
+
+        if (File.Exists(fullpath))
+        {
+            await response.SendFileAsync(fullpath);
+        }
+        else
+        {
+            response.StatusCode= 404;
+            await response.WriteAsync("<h1>Not Found</h1>");
+        }
     }
 );
 
