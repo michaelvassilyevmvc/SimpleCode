@@ -22,15 +22,7 @@ app.MapRazorPages();
 
 app.Run(async (context) => 
     {
-        context.Response.ContentType = "text/html; charset=utf-8";
-        StringBuilder sb = new StringBuilder();
-        sb.Append("<table>");
-        foreach (var item in context.Request.Query)
-        {
-            sb.Append($"<tr><td>{item.Key}</td><td>{item.Value}</td></tr>");
-        }
-        sb.Append("</table>");
-        await context.Response.WriteAsync(sb.ToString());
+        await context.Response.SendFileAsync(@"cat.jpg");
     }
 );
 
