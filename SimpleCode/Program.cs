@@ -22,17 +22,7 @@ app.MapRazorPages();
 
 app.Run(async (context) => 
     {
-        context.Response.ContentType = "text/html;charset = utf-8";
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.Append("<table>");
-        foreach (var header in context.Request.Headers)
-        {
-            sb.Append($"<tr><td>{header.Key}</td><td>{header.Value}</td></tr>");
-        }
-        sb.Append("</table>");
-        await context.Response.WriteAsync(sb.ToString());
+        await context.Response.WriteAsync($"Path: {context.Request.Path}");
     }
 );
 
