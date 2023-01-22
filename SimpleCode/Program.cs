@@ -1,6 +1,6 @@
-using Microsoft.Extensions.FileProviders;
+using SimpleCode.Converters;
 using SimpleCode.Models;
-using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,19 +22,34 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.Run(async (context) => 
+app.Run(async (context) =>
     {
-        Person person = new Person
+        var response = context.Response;
+        var request = context.Request;
+
+        if (request.Path == "/api/user")
         {
-            Name = "Tom",
-            Age = 22
-        };
+            var responseText = "Некорректные данные";
+            
+            if (request.HasJsonContentType())
+            {
+                var jsonoptions = new JsonSerializerOptions();
+                jsonoptions.Converters.Add(new PersonConverter());
 
+                var person = await request.ReadFromJsonAsync<Person>(jsonoptions);
+                if (person != null)
+                {
+                    responseText = $"Name: {person.Name} Age: {person.Age}";
+                }
+            }
 
-
-        await context.Response.WriteAsJsonAsync(person);
-
-
+            await response.WriteAsJsonAsync(new { text = responseText });
+        }
+        else
+        {
+            response.ContentType = "text/html; charset=utf-8";
+            await response.SendFileAsync("html/index.html");
+        }
     }
 );
 
